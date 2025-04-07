@@ -228,15 +228,18 @@ async function run() {
       res.send(result)
     })
 
-    // Get all rooms from db
-    app.get('/rooms', async (req, res) => {
-      const category = req.query.category
-      console.log(category)
-      let query = {}
-      if (category && category !== 'null') query = { category }
-      const result = await roomsCollection.find(query).toArray()
-      res.send(result)
-    })
+
+// Route to get all rooms from the database
+app.get('/rooms', async (req, res) => {
+  const category = req.query.category        // Get the category value from the query string (?category=value) 
+  let query = {}                             // Initialize the MongoDB query as empty (meaning: fetch all)  
+  if (category && category !== 'null') query = { category } // If category exists and is not the string 'null', filter by category
+  const result = await roomsCollection.find(query).toArray()// Fetch all rooms matching the query (filtered or all) from MongoDB
+  // Send the result as response
+  res.send(result)
+})
+
+
 
     // Save a room data in db
     app.post('/room', verifyToken, verifyHost, async (req, res) => {
